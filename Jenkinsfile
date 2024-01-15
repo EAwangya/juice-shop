@@ -49,7 +49,7 @@ pipeline {
                 catchError(buildResult: 'SUCCESS') {
                     script {
                         sh "docker build -t retirescan ./Dockerfileretirescan"
-                        sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app retirescan --verbose"
+                        sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app retirescan"
                         // archiveArtifacts artifacts: 'gitleaks_scan.json', fingerprint: true
                     }
                 }
