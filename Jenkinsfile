@@ -48,8 +48,8 @@ pipeline {
             steps {
                 catchError(buildResult: 'SUCCESS') {
                     script {
-                        sh "sudo apt install -y nodejs=14.x.y npm"
-                        sh 'npm install -g retire'
+                        // sh ""
+                        // sh 'npm install -g retire'
                         sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app gruebel/retirejs:latest --outputformat json --outputpath retirejs_scan.json"
                         // archiveArtifacts artifacts: 'gitleaks_scan.json', fingerprint: true
                     }
