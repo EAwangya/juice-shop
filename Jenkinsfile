@@ -47,7 +47,7 @@ pipeline {
         stage('Upload Reports'){
             steps {
                 script {
-                    sh "docker build -t uploadreport Dockerfilepython"
+                    sh "docker build -t uploadreport ."
                     sh "docker run -v "${PWD}":/app uploadreport python upload-reports.py gitleaks_scan.json"
                     sh "docker run -v "${PWD}":/app uploadreport python upload-reports.py njs_scan.sarif"
                     sh "docker run -v "${PWD}":/app uploadreport python upload-reports.py semgrep_scan.json"
