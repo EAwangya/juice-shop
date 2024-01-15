@@ -44,17 +44,6 @@ pipeline {
                 }
             }
         }
-        docker run --rm -v $(pwd):/app gruebel/retirejs:latest --outputformat json --outputpath retirejs_scan.json
-        stage('JS vulnerability check') {
-            agent {
-                docker 'gruebel/retirejs:latest'
-                args '--entrypoint ""'
-            }
-            steps {
-                sh 'retire'
-                sh "docker run --rm -v $PWD:/app gruebel/retirejs:latest --ignorefile .retireignore.json"
-            }
-        } 
         stage('JS vulnerability check') {
             steps {
                 catchError(buildResult: 'SUCCESS') {
