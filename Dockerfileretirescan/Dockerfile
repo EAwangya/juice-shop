@@ -35,4 +35,4 @@ RUN npm install -g retire
 COPY . .
 
 # Run retire.js to scan for vulnerabilities
-CMD ["retire", "--outputformat", "json", "--outputpath", "/app/retirejs_scan.json"]
+CMD ["retire", "--outputformat", "json", "--outputpath", "retirejs_scan.json"]
