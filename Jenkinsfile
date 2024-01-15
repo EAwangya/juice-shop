@@ -70,6 +70,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker build -t eawangya/juiceshop:1.0.1 .'
+                    // sh 'docker run --rm -p 3000:3000 eawangya/juiceshop:1.0.1'
                 }
             }
         }
@@ -78,7 +79,19 @@ pipeline {
                 sh 'trivy image eawangya/juiceshop:1.0.1'
             }
         }
+        stage('Docker Push') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        executeCommand("echo \${PASS} | docker login -u \${USER} --password-stdin", 'Docker login failed')
+                        executeCommand("docker push eawangya/juiceshop:1.0.1", 'Docker push failed')
 
+                        // Clean Jenkins Server
+                        executeCommand("docker rmi -f \$(docker images -qa)", 'Docker image cleanup failed')
+                    }
+                }
+            }
+        }
     }
     post {
         always {
