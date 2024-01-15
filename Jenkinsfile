@@ -44,6 +44,28 @@ pipeline {
                 }
             }
         }
+        docker run --rm -v $(pwd):/app gruebel/retirejs:latest --outputformat json --outputpath retirejs_scan.json
+        stage('JS vulnerability check') {
+            agent {
+                docker 'gruebel/retirejs:latest'
+                args '--entrypoint ""'
+            }
+            steps {
+                sh 'retire'
+                sh "docker run --rm -v $PWD:/app gruebel/retirejs:latest --ignorefile .retireignore.json"
+            }
+        } 
+        stage('JS vulnerability check') {
+            steps {
+                catchError(buildResult: 'SUCCESS') {
+                    script {
+                        sh 'npm install -g retire'
+                        sh "docker run --rm -v $(pwd):/app gruebel/retirejs:latest --outputformat json --outputpath retirejs_scan.json"
+                        // archiveArtifacts artifacts: 'gitleaks_scan.json', fingerprint: true
+                    }
+                }
+            }
+        }               
         stage('Upload Reports'){
             steps {
                 script {
@@ -51,6 +73,7 @@ pipeline {
                     sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py gitleaks_scan.json"
                     sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py njs_scan.sarif"
                     sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py semgrep_scan.json"
+                    sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py retirejs_scan.json"
                 }
             }
         }
@@ -60,6 +83,7 @@ pipeline {
             archiveArtifacts 'gitleaks_scan.json'
             archiveArtifacts 'njs_scan.sarif'
             archiveArtifacts 'semgrep_scan.json'
+            archiveArtifacts 'retirejs_scan.json'
         }
     }    
 

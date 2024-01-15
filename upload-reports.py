@@ -34,7 +34,7 @@ def main():
         scan_type = 'SARIF' 
     elif file_name == 'semgrep_scan.json':
         scan_type = 'Semgrep JSON Report'
-    elif file_name == 'retire.json':
+    elif file_name == 'retirejs_scan.json':
         scan_type = 'Retire.js Scan'
     elif file_name == 'trivy.json':
         scan_type = 'Trivy Scan'
