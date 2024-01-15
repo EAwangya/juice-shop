@@ -66,6 +66,19 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker') {
+            steps {
+                script {
+                    sh 'docker build -t eawangya/juiceshop:1.0.1 .'
+                }
+            }
+        }
+        stage('Trivy Image Scan') {
+            steps {
+                sh 'trivy image eawangya/juiceshop:1.0.1'
+            }
+        }
+
     }
     post {
         always {
