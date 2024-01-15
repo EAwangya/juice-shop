@@ -50,7 +50,7 @@ pipeline {
                     script {
                         // sh ""
                         // sh 'npm install -g retire'
-                        sh "retire --outputformat json --outputpath retirejs_scan.json"
+                        sh "retire"
                         // archiveArtifacts artifacts: 'gitleaks_scan.json', fingerprint: true
                     }
                 }
