@@ -44,13 +44,18 @@ pipeline {
         //         }
         //     }
         // }
-        stage('OWASP Scan') {
+        stage('JS vulnerability check') {
             steps {
-                echo "Identifying vulnerabilities in project dependencies"
-                dependencyCheck additionalArguments: '', odcInstallation: 'DP-check'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                catchError(buildResult: 'SUCCESS') {
+                    script {
+                        sh "docker build -t retirescan ./Dockerfileretirescan"
+                        // sh 'npm install -g retire'
+                        sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app retirescan"
+                        // archiveArtifacts artifacts: 'gitleaks_scan.json', fingerprint: true
+                    }
+                }
             }
-        }              
+        }               
         stage('Upload Reports'){
             steps {
                 script {
@@ -58,7 +63,7 @@ pipeline {
                     // sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py gitleaks_scan.json"
                     // sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py njs_scan.sarif"
                     // sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py semgrep_scan.json"
-                    sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py dependency-check-report.xml"
+                    sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py retirejs_scan.json"
                 }
             }
         }
@@ -68,7 +73,7 @@ pipeline {
             // archiveArtifacts 'gitleaks_scan.json'
             // archiveArtifacts 'njs_scan.sarif'
             // archiveArtifacts 'semgrep_scan.json'
-            archiveArtifacts 'dependency-check-report.xml'
+            archiveArtifacts 'retirejs_scan.json'
         }
     }    
 
