@@ -44,18 +44,13 @@ pipeline {
         //         }
         //     }
         // }
-        stage('JS vulnerability check') {
+        stage('OWASP Scan') {
             steps {
-                catchError(buildResult: 'SUCCESS') {
-                    script {
-                        // sh ""
-                        // sh 'npm install -g retire'
-                        sh "retire"
-                        // archiveArtifacts artifacts: 'gitleaks_scan.json', fingerprint: true
-                    }
-                }
+                echo "Identifying vulnerabilities in project dependencies"
+                dependencyCheck additionalArguments: '', odcInstallation: 'DP-check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
-        }               
+        }              
         stage('Upload Reports'){
             steps {
                 script {
@@ -63,7 +58,7 @@ pipeline {
                     // sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py gitleaks_scan.json"
                     // sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py njs_scan.sarif"
                     // sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py semgrep_scan.json"
-                    sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py retirejs_scan.json"
+                    sh "docker run --rm -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py dependency-check-report.xml"
                 }
             }
         }
@@ -73,7 +68,7 @@ pipeline {
             // archiveArtifacts 'gitleaks_scan.json'
             // archiveArtifacts 'njs_scan.sarif'
             // archiveArtifacts 'semgrep_scan.json'
-            archiveArtifacts 'retirejs_scan.json'
+            archiveArtifacts 'dependency-check-report.xml'
         }
     }    
 

@@ -36,6 +36,8 @@ def main():
         scan_type = 'Semgrep JSON Report'
     elif file_name == 'retirejs_scan.json':
         scan_type = 'Retire.js Scan'
+    elif file_name == 'dependency-check-report.xml':
+        scan_type = 'Dependency Check Scan'
     elif file_name == 'trivy.json':
         scan_type = 'Trivy Scan'
     else:
