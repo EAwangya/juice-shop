@@ -48,9 +48,9 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t uploadreport ."
-                    sh "docker run -v "${PWD}":/app uploadreport python upload-reports.py gitleaks_scan.json"
-                    sh "docker run -v "${PWD}":/app uploadreport python upload-reports.py njs_scan.sarif"
-                    sh "docker run -v "${PWD}":/app uploadreport python upload-reports.py semgrep_scan.json"
+                    sh "docker run -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py gitleaks_scan.json"
+                    sh "docker run -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py njs_scan.sarif"
+                    sh "docker run -v \"${PATH_TO_HOST_FOLDER}\":/app uploadreport python upload-reports.py semgrep_scan.json"
                 }
             }
         }
