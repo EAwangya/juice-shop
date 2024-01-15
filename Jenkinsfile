@@ -44,6 +44,14 @@ pipeline {
                 }
             }
         }
+        stage('Upload Reports'){
+            steps {
+                script {
+                    sh "python3 --version"
+                    sh "python3 upload-reports.py"
+                }
+            }
+        }
     }
     post {
         always {
