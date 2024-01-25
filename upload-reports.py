@@ -3,17 +3,17 @@ import sys
 
 def import_scan(file_name, scan_type):
     url = 'https://demo.defectdojo.org/api/v2/import-scan/'
-    headers = {'Authorization': 'Token 548afd6fab3bea9794a41b31da0e9404f733e222'}
+    headers = {'Authorization': 'Token 98127ac75ed0db3fe4185a42f822fc214e404ed9'}
     data = {
         'active': True,
         'verified': True,
         'scan_type': scan_type,
         'minimun_severity': 'Low',
-        'engagement': 26
+        'engagement': 23
     }
 
     files = {'file': open(file_name, 'rb')}
-    response = requests.post(url, headers=headers, data=data, files=files)
+    response = requests.post(url, headers=headers, data=data, files=files) 
 
     if response.status_code == 201:
         print(f'{scan_type} scan results imported successfully')
