@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-        stage('JS vulnerability check') {
+        stage('RetireJS - vulnerability check') {
             steps {
                 catchError(buildResult: 'SUCCESS') {
                     script {
@@ -69,6 +69,7 @@ pipeline {
         stage('Build Docker') {
             steps {
                 script {
+                    sh "docker rmi -f \$(docker images -qa)"
                     sh 'docker build -t eawangya/juiceshop:1.0.1 .'
                     // sh 'docker run --rm -p 3000:3000 eawangya/juiceshop:1.0.1'
                 }
